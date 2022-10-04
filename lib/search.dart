@@ -59,13 +59,13 @@ class _SearchPageState extends State<SearchPage> {
               });
             },
           ),
-          SizedBox(
+          const SizedBox(
             height: 50.0,
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
+              const Padding(
                 padding: EdgeInsets.fromLTRB(20.0, 0, 0, 20.0),
                 child: Text(
                   'Date',
@@ -90,7 +90,7 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                       Text(
                         date,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16.0, fontWeight: FontWeight.bold),
                       ),
                       Text('9.30am'),
