@@ -127,7 +127,22 @@ class _SearchPageState extends State<SearchPage> {
                 padding: EdgeInsets.only(top: 250.0),
                 child: Center(
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                                title: const Text('data'),
+                                content: const Text('HHAHHAHHH'),
+                                actions: [
+                                  ElevatedButton(
+                                      onPressed: () {},
+                                      child: const Text('Search')),
+                                  ElevatedButton(
+                                      onPressed: () {},
+                                      child: const Text('Cancel')),
+                                ],
+                              ));
+                    },
                     child: Text(
                       'Search',
                       style: TextStyle(
