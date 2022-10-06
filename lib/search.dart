@@ -8,6 +8,10 @@ class SearchPage extends StatefulWidget {
   State<SearchPage> createState() => _SearchPageState();
 }
 
+bool _isChecked1 = false;
+bool _isChecked2 = false;
+bool _isChecked3 = false;
+
 class _SearchPageState extends State<SearchPage> {
   bool _expanded = false;
   // DateTime now = DateTime.now();
@@ -45,9 +49,33 @@ class _SearchPageState extends State<SearchPage> {
                     padding: EdgeInsets.fromLTRB(130.0, 0.0, 0.0, 30.0),
                     child: Column(
                       children: [
-                        _buildCheckList('No Kids Zone'),
-                        _buildCheckList('Pet-Friendly'),
-                        _buildCheckList('Free breakfast'),
+                        CheckboxListTile(
+                            title: Text('No Kids Zone'),
+                            value: _isChecked1,
+                            controlAffinity: ListTileControlAffinity.leading,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                _isChecked1 = value!;
+                              });
+                            }),
+                        CheckboxListTile(
+                            title: Text('Pet-Friendly'),
+                            value: _isChecked2,
+                            controlAffinity: ListTileControlAffinity.leading,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                _isChecked2 = value!;
+                              });
+                            }),
+                        CheckboxListTile(
+                            title: Text('Free breakfast'),
+                            value: _isChecked3,
+                            controlAffinity: ListTileControlAffinity.leading,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                _isChecked3 = value!;
+                              });
+                            }),
                       ],
                     )),
                 isExpanded: _expanded,
@@ -131,15 +159,92 @@ class _SearchPageState extends State<SearchPage> {
                       showDialog(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                                title: const Text('data'),
-                                content: const Text('HHAHHAHHH'),
+                                insetPadding: EdgeInsets.zero,
+                                title: Container(
+                                  child: SafeArea(
+                                    child: Center(
+                                      child: Text(
+                                        'Please check\nyour choice :)',
+                                        style: TextStyle(fontSize: 18.0),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                content: Container(
+                                  // padding: EdgeInsets.all(10.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 20.0),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.filter,
+                                              color: Colors.blue,
+                                            ),
+                                            Container(
+                                                width: 150,
+                                                padding:
+                                                    EdgeInsets.only(left: 10.0),
+                                                child: filterText())
+                                          ],
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.calendar_month,
+                                            color: Colors.blue,
+                                          ),
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 10.0),
+                                            child: Text(
+                                              'IN',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14.0),
+                                            ),
+                                          ),
+                                          Text(
+                                            date,
+                                            style: TextStyle(
+                                                color: Colors.black54,
+                                                fontSize: 14.0),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
                                 actions: [
-                                  ElevatedButton(
-                                      onPressed: () {},
-                                      child: const Text('Search')),
-                                  ElevatedButton(
-                                      onPressed: () {},
-                                      child: const Text('Cancel')),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                          ),
+                                          onPressed: () {},
+                                          child: const Text('Search')),
+                                      ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            primary: Colors.black12,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                          ),
+                                          onPressed: () {},
+                                          child: const Text('Cancel')),
+                                    ],
+                                  ),
                                 ],
                               ));
                     },
@@ -149,11 +254,13 @@ class _SearchPageState extends State<SearchPage> {
                           fontSize: 26.0, fontWeight: FontWeight.w400),
                     ),
                     style: ElevatedButton.styleFrom(
-                        elevation: 5,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 50.0, vertical: 15.0),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10))),
+                      elevation: 5,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 50.0, vertical: 15.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -163,49 +270,28 @@ class _SearchPageState extends State<SearchPage> {
       ),
     );
   }
-}
 
-Row _buildCheckList(String label) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.start,
-    children: [
-      Checklist(),
-      Text(label),
-    ],
-  );
-}
+  Text filterText() {
+    String filter1 = '';
+    String filter2 = '';
+    String filter3 = '';
+    filter1 = (_isChecked1 == true) ? 'No Kids Zone / ' : '';
+    filter2 = (_isChecked2 == true) ? 'Pet-Friendly / ' : '';
+    filter3 = (_isChecked3 == true) ? 'Free breakfast /' : '';
+    return Text(
+      '$filter1$filter2$filter3',
+      style: TextStyle(color: Colors.black54, fontSize: 12.0),
+    );
+  }
 
-class Checklist extends StatefulWidget {
-  const Checklist({Key? key}) : super(key: key);
-
-  @override
-  State<Checklist> createState() => _MyStatefulWidgetState();
-}
-
-class _MyStatefulWidgetState extends State<Checklist> {
-  bool isChecked = false;
-
-  @override
-  Widget build(BuildContext context) {
-    Color getColor(Set<MaterialState> states) {
-      const Set<MaterialState> interactiveStates = <MaterialState>{
-        MaterialState.pressed,
-        MaterialState.hovered,
-        MaterialState.focused,
-      };
-      if (states.any(interactiveStates.contains)) {
-        return Colors.blue;
-      }
-      return Colors.blue;
-    }
-
-    return Checkbox(
-      checkColor: Colors.white,
-      fillColor: MaterialStateProperty.resolveWith(getColor),
-      value: isChecked,
+  CheckboxListTile checklist(String label, bool ischecked) {
+    return CheckboxListTile(
+      title: Text(label),
+      value: ischecked,
+      controlAffinity: ListTileControlAffinity.leading,
       onChanged: (bool? value) {
         setState(() {
-          isChecked = value!;
+          ischecked = value!;
         });
       },
     );
