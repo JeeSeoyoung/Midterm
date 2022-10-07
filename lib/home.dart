@@ -79,7 +79,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       // TODO: Add app bar (102)
       appBar: AppBar(
-        title: const Text('SHRINE'),
+        title: Center(child: const Text('Main')),
         actions: <Widget>[
           IconButton(
             icon: const Icon(
@@ -92,8 +92,8 @@ class HomePage extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(
-              Icons.tune,
-              semanticLabel: 'filter',
+              Icons.language,
+              semanticLabel: 'homepage',
             ),
             onPressed: () {
               print('Filter button');
@@ -102,12 +102,35 @@ class HomePage extends StatelessWidget {
         ],
       ),
       // TODO: Add a grid view (102)
-      body: GridView.count(
-        crossAxisCount: 2,
-        padding: const EdgeInsets.all(16.0),
-        childAspectRatio: 8.0 / 9.0,
-        children: _buildGridCards(context),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: ListView(
+              children: [
+                Container(
+                  padding: EdgeInsets.fromLTRB(0.0, 15.0, 16.0, 0.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      _gridChengeButton(),
+                    ],
+                  ),
+                ),
+                GridView.count(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  physics: ScrollPhysics(),
+                  crossAxisCount: 2,
+                  padding: const EdgeInsets.all(16.0),
+                  childAspectRatio: 8.0 / 9.0,
+                  children: _buildGridCards(context),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
+
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -130,7 +153,7 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      // TODO: Set resizeToAvoidBottomInset (101)
+
       resizeToAvoidBottomInset: false,
     );
   }
@@ -163,7 +186,6 @@ ListTile _buildMenu(IconData icon, String label, BuildContext context) {
     leading: Icon(icon, color: Colors.blue),
     title: Text(label),
     onTap: () {
-      // Navigator.pushNamed(context, '/' + label);
       if (label == 'Home') {
         Navigator.pop(context);
       } else {
@@ -179,21 +201,39 @@ ListTile _buildMenu(IconData icon, String label, BuildContext context) {
       }
       // Navigator.pop(context);
     },
-    // title: Row(
-    //   children: [
-    //     SizedBox(width: 10.0),
-    //     Icon(
-    //       icon,
-    //       color: Colors.blue,
-    //     ),
-    //     SizedBox(
-    //       width: 30.0,
-    //     ),
-    //     Text(label)
-    //   ],
-    // ),
-    // onTap: () {
-    //   Navigator.pop(context);
-    // },
   );
+}
+
+class _gridChengeButton extends StatefulWidget {
+  const _gridChengeButton({Key? key}) : super(key: key);
+
+  @override
+  State<_gridChengeButton> createState() => __gridChengeButtonState();
+}
+
+class __gridChengeButtonState extends State<_gridChengeButton> {
+  List<bool> _selections = [true, false];
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        child: ToggleButtons(
+      borderRadius: BorderRadius.circular(5),
+      children: [
+        Icon(Icons.list),
+        Icon(Icons.grid_view_outlined),
+      ],
+      isSelected: _selections,
+      onPressed: (int index) {
+        setState(() {
+          if (index == 0) {
+            _selections = [true, false];
+            print('$index is ${_selections[index]}');
+          } else {
+            _selections = [false, true];
+            print('$index is ${_selections[index]}');
+          }
+        });
+      },
+    ));
+  }
 }

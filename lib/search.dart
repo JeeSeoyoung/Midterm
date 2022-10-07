@@ -231,7 +231,9 @@ class _SearchPageState extends State<SearchPage> {
                                                   BorderRadius.circular(12),
                                             ),
                                           ),
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
                                           child: const Text('Search')),
                                       ElevatedButton(
                                           style: ElevatedButton.styleFrom(
@@ -241,7 +243,9 @@ class _SearchPageState extends State<SearchPage> {
                                                   BorderRadius.circular(12),
                                             ),
                                           ),
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
                                           child: const Text('Cancel')),
                                     ],
                                   ),
