@@ -14,11 +14,19 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shrine/detailPage.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'model/product.dart';
 import 'model/products_repository.dart';
 
 bool isListView = true;
+final Uri _url = Uri.parse('https://www.handong.edu/');
+Future<void> _launchUrl() async {
+  if (!await launchUrl(_url)) {
+    throw 'Could not launch $_url';
+  }
+}
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -47,9 +55,7 @@ class HomePage extends StatelessWidget {
               Icons.language,
               semanticLabel: 'homepage',
             ),
-            onPressed: () {
-              print('Filter button');
-            },
+            onPressed: _launchUrl,
           ),
         ],
       ),
@@ -115,48 +121,33 @@ class _listBodyState extends State<listBody> {
     final NumberFormat formatter = NumberFormat.simpleCurrency(
         locale: Localizations.localeOf(context).toString());
 
-    return products.map((product) {
+    return products.map((Product product) {
       return Card(
         clipBehavior: Clip.antiAlias,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            AspectRatio(
-              aspectRatio: 20 / 11,
-              child: Image.asset(
-                product.assetName,
-                package: product.assetPackage,
-                fit: BoxFit.fitWidth,
+        child: isListView
+            ? ListTile(
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                leading: Image.asset(
+                  product.assetName,
+                  package: product.assetPackage,
+                ),
+                title: card(context, product),
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  AspectRatio(
+                    aspectRatio: 20 / 11,
+                    child: Image.asset(
+                      product.assetName,
+                      package: product.assetPackage,
+                      fit: BoxFit.fitWidth,
+                    ),
+                  ),
+                  card(context, product),
+                ],
               ),
-            ),
-            card(product),
-          ],
-        ),
-      );
-    }).toList();
-  }
-
-  List<Card> _buildListCard(BuildContext context) {
-    List<Product> products = ProductsRepository.loadProducts(Category.all);
-
-    if (products.isEmpty) {
-      return const <Card>[];
-    }
-
-    final ThemeData theme = Theme.of(context);
-    final NumberFormat formatter = NumberFormat.simpleCurrency(
-        locale: Localizations.localeOf(context).toString());
-
-    return products.map((product) {
-      return Card(
-        clipBehavior: Clip.antiAlias,
-        child: ListTile(
-          leading: Image.asset(
-            product.assetName,
-            package: product.assetPackage,
-          ),
-          title: card(product),
-        ),
       );
     }).toList();
   }
@@ -209,7 +200,7 @@ class _listBodyState extends State<listBody> {
                   crossAxisCount: _crossAxisCount,
                   padding: const EdgeInsets.all(16.0),
                   childAspectRatio: 10.0 / 3.5,
-                  children: _buildListCard(context),
+                  children: _buildGridCards(context),
                 )
               : GridView.count(
                   shrinkWrap: true,
@@ -271,19 +262,29 @@ ListTile _buildMenu(IconData icon, String label, BuildContext context) {
   );
 }
 
-Stack card(product) {
+Stack card(context, product) {
   return Stack(
     alignment: AlignmentDirectional.bottomEnd,
     children: <Widget>[
       Container(
-        padding: const EdgeInsets.fromLTRB(9.0, 12.0, 10.0, 20.0),
+        padding: const EdgeInsets.fromLTRB(9.0, 10.0, 10.0, 20.0),
         child: contentRow(product),
       ),
       Positioned(
-        top: isListView ? 70 : 60,
+        top: isListView ? 60 : 60,
         child: Container(
           child: TextButton(
-            onPressed: () {},
+            onPressed: () {
+              print(product.id);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => DetailPage(
+                            id: product.id,
+                            product: product,
+                          )));
+              // Navigator.pushNamed(context, '/detailPage');
+            },
             style: TextButton.styleFrom(
               minimumSize: Size.zero,
               padding: EdgeInsets.zero,
