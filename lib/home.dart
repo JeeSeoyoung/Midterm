@@ -53,6 +53,27 @@ class HomePage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.star_rounded,
+                          color: Colors.yellowAccent,
+                          size: 15.0,
+                        ),
+                        Icon(
+                          Icons.star_rounded,
+                          color: Colors.yellowAccent,
+                          size: 15.0,
+                        ),
+                        Icon(
+                          Icons.star_rounded,
+                          color: Colors.yellowAccent,
+                          size: 15.0,
+                        ),
+                      ],
+                    ),
                     Text(
                       product.name,
                       style: theme.textTheme.headline6,
