@@ -18,85 +18,16 @@ import 'package:intl/intl.dart';
 import 'model/product.dart';
 import 'model/products_repository.dart';
 
+bool isListView = true;
+
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
-  // TODO: Make a collection of cards (102)
-  List<Card> _buildGridCards(BuildContext context) {
-    List<Product> products = ProductsRepository.loadProducts(Category.all);
-
-    if (products.isEmpty) {
-      return const <Card>[];
-    }
-
-    final ThemeData theme = Theme.of(context);
-    final NumberFormat formatter = NumberFormat.simpleCurrency(
-        locale: Localizations.localeOf(context).toString());
-
-    return products.map((product) {
-      return Card(
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            AspectRatio(
-              aspectRatio: 18 / 11,
-              child: Image.asset(
-                product.assetName,
-                package: product.assetPackage,
-                fit: BoxFit.fitWidth,
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.star_rounded,
-                          color: Colors.yellowAccent,
-                          size: 15.0,
-                        ),
-                        Icon(
-                          Icons.star_rounded,
-                          color: Colors.yellowAccent,
-                          size: 15.0,
-                        ),
-                        Icon(
-                          Icons.star_rounded,
-                          color: Colors.yellowAccent,
-                          size: 15.0,
-                        ),
-                      ],
-                    ),
-                    Text(
-                      product.name,
-                      style: theme.textTheme.headline6,
-                      maxLines: 1,
-                    ),
-                    const SizedBox(height: 8.0),
-                    Text(
-                      formatter.format(product.price),
-                      style: theme.textTheme.subtitle2,
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }).toList();
-  }
-
-  // TODO: Add a variable for Category (104)
   @override
   Widget build(BuildContext context) {
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    int gridRow = isLandscape ? 3 : 2;
     return Scaffold(
       // TODO: Add app bar (102)
       appBar: AppBar(
@@ -126,28 +57,7 @@ class HomePage extends StatelessWidget {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: ListView(
-              children: [
-                Container(
-                  padding: EdgeInsets.fromLTRB(0.0, 15.0, 16.0, 0.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      _gridChengeButton(),
-                    ],
-                  ),
-                ),
-                GridView.count(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  physics: ScrollPhysics(),
-                  crossAxisCount: 2,
-                  padding: const EdgeInsets.all(16.0),
-                  childAspectRatio: 8.0 / 9.0,
-                  children: _buildGridCards(context),
-                ),
-              ],
-            ),
+            child: listBody(),
           ),
         ],
       ),
@@ -177,6 +87,142 @@ class HomePage extends StatelessWidget {
 
       resizeToAvoidBottomInset: false,
     );
+  }
+}
+
+enum ViewType { grid, list }
+
+class listBody extends StatefulWidget {
+  const listBody({Key? key}) : super(key: key);
+
+  @override
+  State<listBody> createState() => _listBodyState();
+}
+
+class _listBodyState extends State<listBody> {
+  int _crossAxisCount = 1;
+  double _aspectRatio = 1.5;
+  ViewType _viewType = ViewType.list;
+  List<bool> _selections = [true, false];
+  List<Card> _buildGridCards(BuildContext context) {
+    List<Product> products = ProductsRepository.loadProducts(Category.all);
+
+    if (products.isEmpty) {
+      return const <Card>[];
+    }
+
+    final ThemeData theme = Theme.of(context);
+    final NumberFormat formatter = NumberFormat.simpleCurrency(
+        locale: Localizations.localeOf(context).toString());
+
+    return products.map((product) {
+      return Card(
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            AspectRatio(
+              aspectRatio: 20 / 11,
+              child: Image.asset(
+                product.assetName,
+                package: product.assetPackage,
+                fit: BoxFit.fitWidth,
+              ),
+            ),
+            card(product),
+          ],
+        ),
+      );
+    }).toList();
+  }
+
+  List<Card> _buildListCard(BuildContext context) {
+    List<Product> products = ProductsRepository.loadProducts(Category.all);
+
+    if (products.isEmpty) {
+      return const <Card>[];
+    }
+
+    final ThemeData theme = Theme.of(context);
+    final NumberFormat formatter = NumberFormat.simpleCurrency(
+        locale: Localizations.localeOf(context).toString());
+
+    return products.map((product) {
+      return Card(
+        clipBehavior: Clip.antiAlias,
+        child: ListTile(
+          leading: Image.asset(
+            product.assetName,
+            package: product.assetPackage,
+          ),
+          title: card(product),
+        ),
+      );
+    }).toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return OrientationBuilder(builder: (context, orientation) {
+      final isLandscape = orientation;
+      int gridRow = (isLandscape == Orientation.landscape) ? 3 : 2;
+
+      // print(orientation);
+      return ListView(
+        children: [
+          Container(
+            padding: EdgeInsets.fromLTRB(0.0, 10.0, 16.0, 0.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ToggleButtons(
+                  borderRadius: BorderRadius.circular(5),
+                  children: [
+                    Icon(Icons.list),
+                    Icon(Icons.grid_view_outlined),
+                  ],
+                  isSelected: _selections,
+                  onPressed: (int index) {
+                    setState(() {
+                      if (index == 0) {
+                        _selections = [true, false];
+                        _viewType = ViewType.list;
+                        _crossAxisCount = 1;
+                        isListView = true;
+                      } else {
+                        _selections = [false, true];
+                        _viewType = ViewType.grid;
+                        isListView = false;
+                        // _crossAxisCount = gridRow;
+                      }
+                    });
+                  },
+                )
+              ],
+            ),
+          ),
+          (_viewType == ViewType.list)
+              ? GridView.count(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  physics: ScrollPhysics(),
+                  crossAxisCount: _crossAxisCount,
+                  padding: const EdgeInsets.all(16.0),
+                  childAspectRatio: 10.0 / 3.5,
+                  children: _buildListCard(context),
+                )
+              : GridView.count(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  physics: ScrollPhysics(),
+                  crossAxisCount: gridRow,
+                  padding: const EdgeInsets.all(16.0),
+                  childAspectRatio: 8.0 / 9.0,
+                  children: _buildGridCards(context),
+                )
+        ],
+      );
+    });
   }
 }
 
@@ -225,36 +271,89 @@ ListTile _buildMenu(IconData icon, String label, BuildContext context) {
   );
 }
 
-class _gridChengeButton extends StatefulWidget {
-  const _gridChengeButton({Key? key}) : super(key: key);
-
-  @override
-  State<_gridChengeButton> createState() => __gridChengeButtonState();
+Stack card(product) {
+  return Stack(
+    alignment: AlignmentDirectional.bottomEnd,
+    children: <Widget>[
+      Container(
+        padding: const EdgeInsets.fromLTRB(9.0, 12.0, 10.0, 20.0),
+        child: contentRow(product),
+      ),
+      Positioned(
+        top: isListView ? 70 : 60,
+        child: Container(
+          child: TextButton(
+            onPressed: () {},
+            style: TextButton.styleFrom(
+              minimumSize: Size.zero,
+              padding: EdgeInsets.zero,
+            ),
+            child: const Text(
+              'more',
+              style: TextStyle(fontSize: 12.0, color: Colors.lightBlueAccent),
+            ),
+          ),
+        ),
+      )
+    ],
+  );
 }
 
-class __gridChengeButtonState extends State<_gridChengeButton> {
-  List<bool> _selections = [true, false];
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        child: ToggleButtons(
-      borderRadius: BorderRadius.circular(5),
-      children: [
-        Icon(Icons.list),
-        Icon(Icons.grid_view_outlined),
-      ],
-      isSelected: _selections,
-      onPressed: (int index) {
-        setState(() {
-          if (index == 0) {
-            _selections = [true, false];
-            print('$index is ${_selections[index]}');
-          } else {
-            _selections = [false, true];
-            print('$index is ${_selections[index]}');
-          }
-        });
-      },
-    ));
-  }
+Row contentRow(product) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Container(
+        padding: EdgeInsets.only(right: 4.0),
+        child: isListView
+            ? const SizedBox()
+            : const Icon(
+                Icons.location_pin,
+                color: Colors.lightBlueAccent,
+              ),
+      ),
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.star_rounded,
+                  color: Colors.yellow,
+                  size: 15.0,
+                ),
+                Icon(
+                  Icons.star_rounded,
+                  color: Colors.yellow,
+                  size: 15.0,
+                ),
+                Icon(
+                  Icons.star_rounded,
+                  color: Colors.yellow,
+                  size: 15.0,
+                ),
+              ],
+            ),
+            Text(
+              product.name,
+              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 14.0),
+              maxLines: 1,
+            ),
+            const SizedBox(height: 5.0),
+            Text(
+              product.address,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 9.0,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
 }
