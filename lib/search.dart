@@ -160,64 +160,63 @@ class _SearchPageState extends State<SearchPage> {
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
                                 insetPadding: EdgeInsets.zero,
-                                title: Container(
-                                  child: SafeArea(
-                                    child: Center(
-                                      child: Text(
-                                        'Please check\nyour choice :)',
-                                        style: TextStyle(fontSize: 18.0),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                content: Container(
-                                  // padding: EdgeInsets.all(10.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 20.0),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.filter,
-                                              color: Colors.blue,
-                                            ),
-                                            Container(
-                                                width: 150,
-                                                padding:
-                                                    EdgeInsets.only(left: 10.0),
-                                                child: filterText())
-                                          ],
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.zero,
+                                      // color: Colors.blue,
+                                      child: SafeArea(
+                                        child: Center(
+                                          child: Text(
+                                            'Please check\nyour choice :)',
+                                            style: TextStyle(fontSize: 18.0),
+                                          ),
                                         ),
                                       ),
-                                      Row(
+                                    ),
+                                    Container(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 20.0),
+                                      child: Row(
                                         children: [
                                           Icon(
-                                            Icons.calendar_month,
+                                            Icons.filter,
                                             color: Colors.blue,
                                           ),
                                           Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 10.0),
-                                            child: Text(
-                                              'IN',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 14.0),
-                                            ),
-                                          ),
-                                          Text(
-                                            date,
-                                            style: TextStyle(
-                                                color: Colors.black54,
-                                                fontSize: 14.0),
-                                          )
+                                              width: 150,
+                                              padding:
+                                                  EdgeInsets.only(left: 10.0),
+                                              child: filterText())
                                         ],
-                                      )
-                                    ],
-                                  ),
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.calendar_month,
+                                          color: Colors.blue,
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 10.0),
+                                          child: Text(
+                                            'IN',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14.0),
+                                          ),
+                                        ),
+                                        Text(
+                                          date,
+                                          style: TextStyle(
+                                              color: Colors.black54,
+                                              fontSize: 14.0),
+                                        )
+                                      ],
+                                    )
+                                  ],
                                 ),
                                 actions: [
                                   Row(
