@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:shrine/hotel.dart';
-import 'package:shrine/practice.dart';
 import 'model/product.dart';
 import 'model/products_repository.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
+// final saved = <Hotel>[];
+
 class DetailPage extends StatelessWidget {
   final Hotel hotel;
-  const DetailPage({Key? key, required this.hotel}) : super(key: key);
+  final List saved;
+  const DetailPage({Key? key, required this.hotel, required this.saved})
+      : super(key: key);
   // final Product product;
 
   @override
@@ -18,9 +21,62 @@ class DetailPage extends StatelessWidget {
         title: Center(child: const Text('Detail')),
       ),
       body: ListView(
-        children: [detailView(hotel: hotel)],
+        children: [detailViewContent(hotel, saved)],
       ),
     );
+  }
+}
+
+Stack detailViewContent(hotel, saved) {
+  return Stack(
+    alignment: Alignment.topRight,
+    children: [
+      detailView(hotel: hotel),
+      Positioned(
+        top: 20,
+        right: 10,
+        child: Container(
+          child: favoriteBTN(
+            hotel: hotel,
+            saved: saved,
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
+class favoriteBTN extends StatefulWidget {
+  const favoriteBTN({Key? key, required this.hotel, required this.saved})
+      : super(key: key);
+  final Hotel hotel;
+  final List saved;
+  @override
+  State<favoriteBTN> createState() => _favoriteBTNState();
+}
+
+class _favoriteBTNState extends State<favoriteBTN> {
+  @override
+  Widget build(BuildContext context) {
+    final hotel = widget.hotel;
+    final saved = widget.saved;
+    final alreadySaved = saved.contains(hotel);
+    return IconButton(
+        onPressed: () {
+          print('Press button');
+          setState(() {
+            if (alreadySaved) {
+              saved.remove(hotel);
+            } else {
+              saved.add(hotel);
+            }
+          });
+        },
+        icon: Icon(
+          alreadySaved ? Icons.favorite : Icons.favorite_border,
+          color: Colors.red,
+          semanticLabel: alreadySaved ? 'Remove from saved' : 'save',
+        ));
   }
 }
 

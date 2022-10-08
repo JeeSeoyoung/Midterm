@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shrine/detailPage.dart';
+import 'package:shrine/favorite.dart';
 import 'package:shrine/hotel.dart';
 import 'package:shrine/hotelLists.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -8,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'model/product.dart';
 import 'model/products_repository.dart';
 
+final saved = <Hotel>[];
 bool isListView = true;
 final Uri _url = Uri.parse('https://www.handong.edu/');
 Future<void> _launchUrl() async {
@@ -18,6 +20,7 @@ Future<void> _launchUrl() async {
 
 enum ViewType { grid, list }
 final List hotelLists = HotelLists().hotels;
+final List favorteLists = [];
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -259,9 +262,8 @@ Stack card(context, index) {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => DetailPage(
-                            hotel: hotelLists[index],
-                          )));
+                      builder: (context) =>
+                          DetailPage(hotel: hotelLists[index], saved: saved)));
               // Navigator.pushNamed(context, '/detailPage');
             },
             style: TextButton.styleFrom(
@@ -312,7 +314,10 @@ ListTile _buildMenu(IconData icon, String label, BuildContext context) {
         if (label == 'Search')
           Navigator.pushNamed(context, '/Search');
         else if (label == 'Favorite Hotel') {
-          Navigator.pushNamed(context, '/Search');
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FavoritePage(saved: saved)));
         } else if (label == 'My Page') {
           Navigator.pushNamed(context, '/Search');
         } else if (label == 'Log Out') {
