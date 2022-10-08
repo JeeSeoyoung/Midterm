@@ -20,6 +20,7 @@ import 'signUp.dart';
 import 'search.dart';
 import 'detailPage.dart';
 import 'favorite.dart';
+import 'myPage.dart';
 
 // TODO: Convert ShrineApp to stateful widget (104)
 class ShrineApp extends StatelessWidget {
@@ -36,7 +37,7 @@ class ShrineApp extends StatelessWidget {
         '/': (BuildContext context) => const HomePage(),
         '/signUp': (BuildContext context) => const SignUpPage(),
         '/Search': (BuildContext context) => const SearchPage(),
-        // '/Favorite': (BuildContext context) => const FavoritePage(saved:saved),
+        // '/MyPage': (BuildContext context) => const MyPage(),
 
         // '/detailPage': (BuildContext context) => const DetailPage(),
         // TODO: Make currentCategory field take _currentCategory (104)

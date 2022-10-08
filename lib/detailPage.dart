@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shrine/hotel.dart';
-import 'model/product.dart';
-import 'model/products_repository.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
 // final saved = <Hotel>[];
@@ -27,56 +25,86 @@ class DetailPage extends StatelessWidget {
   }
 }
 
-Stack detailViewContent(hotel, saved) {
-  return Stack(
-    alignment: Alignment.topRight,
+Column detailViewContent(hotel, saved) {
+  return Column(
     children: [
-      detailView(hotel: hotel),
-      Positioned(
-        top: 20,
-        right: 10,
-        child: Container(
-          child: favoriteBTN(
-            hotel: hotel,
-            saved: saved,
-          ),
-        ),
-      ),
+      favoriteIMG(hotel: hotel, saved: saved),
+      detailView(hotel: hotel, saved: saved),
     ],
   );
 }
 
-class favoriteBTN extends StatefulWidget {
-  const favoriteBTN({Key? key, required this.hotel, required this.saved})
+class favoriteIMG extends StatefulWidget {
+  const favoriteIMG({Key? key, required this.hotel, required this.saved})
       : super(key: key);
   final Hotel hotel;
   final List saved;
   @override
-  State<favoriteBTN> createState() => _favoriteBTNState();
+  State<favoriteIMG> createState() => _favoriteIMGState();
 }
 
-class _favoriteBTNState extends State<favoriteBTN> {
+class _favoriteIMGState extends State<favoriteIMG> {
   @override
   Widget build(BuildContext context) {
     final hotel = widget.hotel;
     final saved = widget.saved;
     final alreadySaved = saved.contains(hotel);
-    return IconButton(
-        onPressed: () {
-          print('Press button');
-          setState(() {
-            if (alreadySaved) {
-              saved.remove(hotel);
-            } else {
-              saved.add(hotel);
-            }
-          });
-        },
-        icon: Icon(
-          alreadySaved ? Icons.favorite : Icons.favorite_border,
-          color: Colors.red,
-          semanticLabel: alreadySaved ? 'Remove from saved' : 'save',
-        ));
+    return Stack(
+      alignment: Alignment.topRight,
+      children: [
+        Hero(
+            tag: '${hotel.imagePath}',
+            child: Material(
+              child: InkWell(
+                onDoubleTap: () {
+                  setState(() {
+                    if (alreadySaved) {
+                      saved.remove(hotel);
+                    } else {
+                      saved.add(hotel);
+                    }
+                  });
+                },
+                child: Image.asset(
+                  hotel.imagePath,
+                  fit: BoxFit.fitHeight,
+                ),
+              ),
+            )),
+        Positioned(
+          top: 20,
+          right: 10,
+          child: Container(
+              child: favoriteIcon(
+            hotel: hotel,
+            saved: saved,
+          )),
+        ),
+      ],
+    );
+  }
+}
+
+class favoriteIcon extends StatefulWidget {
+  const favoriteIcon({Key? key, required this.hotel, required this.saved})
+      : super(key: key);
+  final Hotel hotel;
+  final List saved;
+  @override
+  State<favoriteIcon> createState() => _favoriteIconState();
+}
+
+class _favoriteIconState extends State<favoriteIcon> {
+  @override
+  Widget build(BuildContext context) {
+    final hotel = widget.hotel;
+    final saved = widget.saved;
+    final alreadySaved = saved.contains(hotel);
+    return Icon(
+      alreadySaved ? Icons.favorite : Icons.favorite_border,
+      color: Colors.red,
+      semanticLabel: alreadySaved ? 'Remove from saved' : 'save',
+    );
   }
 }
 
@@ -84,8 +112,10 @@ class detailView extends StatelessWidget {
   const detailView({
     Key? key,
     required this.hotel,
+    required this.saved,
   }) : super(key: key);
 
+  final List saved;
   final Hotel hotel;
 
   @override
@@ -95,13 +125,6 @@ class detailView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Hero(
-            tag: '${hotel.imagePath}',
-            child: Image.asset(
-              hotel.imagePath,
-              fit: BoxFit.fitHeight,
-            ),
-          ),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 16.0),
             child: Column(

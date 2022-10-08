@@ -4,6 +4,7 @@ import 'package:shrine/detailPage.dart';
 import 'package:shrine/favorite.dart';
 import 'package:shrine/hotel.dart';
 import 'package:shrine/hotelLists.dart';
+import 'package:shrine/myPage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'model/product.dart';
@@ -319,7 +320,8 @@ ListTile _buildMenu(IconData icon, String label, BuildContext context) {
               MaterialPageRoute(
                   builder: (context) => FavoritePage(saved: saved)));
         } else if (label == 'My Page') {
-          Navigator.pushNamed(context, '/Search');
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => MyPage(saved: saved)));
         } else if (label == 'Log Out') {
           Navigator.pushNamed(context, '/login');
         }
