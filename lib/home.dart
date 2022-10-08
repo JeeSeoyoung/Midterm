@@ -113,8 +113,11 @@ class _HomePageState extends State<HomePage> {
                           child: ListTile(
                             contentPadding: EdgeInsets.symmetric(
                                 horizontal: 10.0, vertical: 10.0),
-                            leading: Image.asset(
-                              hotelLists[index].imagePath,
+                            leading: Hero(
+                              tag: '${hotelLists[index].imagePath}',
+                              child: Image.asset(
+                                hotelLists[index].imagePath,
+                              ),
                             ),
                             title: card(context, index),
                           ),
@@ -137,9 +140,12 @@ class _HomePageState extends State<HomePage> {
                             children: <Widget>[
                               AspectRatio(
                                 aspectRatio: 20 / 11,
-                                child: Image.asset(
-                                  hotelLists[index].imagePath,
-                                  fit: BoxFit.fitWidth,
+                                child: Hero(
+                                  tag: '${hotelLists[index].id}',
+                                  child: Image.asset(
+                                    hotelLists[index].imagePath,
+                                    fit: BoxFit.fitWidth,
+                                  ),
                                 ),
                               ),
                               card(context, index),
@@ -242,7 +248,7 @@ Stack card(context, index) {
     alignment: AlignmentDirectional.bottomEnd,
     children: <Widget>[
       Container(
-        padding: const EdgeInsets.fromLTRB(9.0, 10.0, 10.0, 20.0),
+        padding: const EdgeInsets.fromLTRB(9.0, 10.0, 10.0, 35.0),
         child: contentRow(index),
       ),
       Positioned(
@@ -250,7 +256,6 @@ Stack card(context, index) {
         child: Container(
           child: TextButton(
             onPressed: () {
-              print(hotelLists[index].id);
               Navigator.push(
                   context,
                   MaterialPageRoute(
