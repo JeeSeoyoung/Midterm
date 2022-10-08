@@ -19,6 +19,7 @@ import 'login.dart';
 import 'signUp.dart';
 import 'search.dart';
 import 'detailPage.dart';
+import 'practice.dart';
 
 // TODO: Convert ShrineApp to stateful widget (104)
 class ShrineApp extends StatelessWidget {

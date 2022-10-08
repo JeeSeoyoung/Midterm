@@ -1,24 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:shrine/hotel.dart';
+import 'package:shrine/practice.dart';
 import 'model/product.dart';
 import 'model/products_repository.dart';
 
-class DetailPage extends StatefulWidget {
-  const DetailPage({Key? key, required this.id, required this.product})
-      : super(key: key);
-  final int id;
-  final Product product;
-
-  @override
-  State<DetailPage> createState() => _DetailPageState();
-}
-
-class _DetailPageState extends State<DetailPage> {
-  // List<Product> products = ProductsRepository.loadProducts(Category.all);
-
-  get product => product;
+class DetailPage extends StatelessWidget {
+  final Hotel hotel;
+  const DetailPage({Key? key, required this.hotel}) : super(key: key);
+  // final Product product;
 
   @override
   Widget build(BuildContext context) {
+    // final Hotel hotel;
     return Scaffold(
       appBar: AppBar(
         title: Center(child: const Text('Detail')),
@@ -45,7 +38,7 @@ class _DetailPageState extends State<DetailPage> {
                 ),
               ],
             ),
-            Text(product.name)
+            Text(hotel.name)
           ],
         ),
       ),

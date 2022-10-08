@@ -19,14 +19,14 @@ Future<void> _launchUrl() async {
 enum ViewType { grid, list }
 final List hotelLists = HotelLists().hotels;
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class HomePage2 extends StatefulWidget {
+  const HomePage2({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage2> createState() => _HomePage2State();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePage2State extends State<HomePage2> {
   List<bool> _selections = [true, false];
   // final List<Hotel> hotelLists = HotelLists().hotels;
   @override
@@ -113,9 +113,11 @@ class _HomePageState extends State<HomePage> {
                           child: ListTile(
                             contentPadding: EdgeInsets.symmetric(
                                 horizontal: 10.0, vertical: 10.0),
-                            leading: Image.asset(
-                              hotelLists[index].imagePath,
-                            ),
+                            leading: Icon(Icons.abc),
+                            // Image.asset(
+                            //   hotel.assetName,
+                            //   package: hotel.assetPackage,
+                            // ),
                             title: card(context, index),
                           ),
                         );
@@ -137,10 +139,12 @@ class _HomePageState extends State<HomePage> {
                             children: <Widget>[
                               AspectRatio(
                                 aspectRatio: 20 / 11,
-                                child: Image.asset(
-                                  hotelLists[index].imagePath,
-                                  fit: BoxFit.fitWidth,
-                                ),
+                                child: Icon(Icons.abc),
+                                // Image.asset(
+                                //   hotel.assetName,
+                                //   package: hotel.assetPackage,
+                                //   fit: BoxFit.fitWidth,
+                                // ),
                               ),
                               card(context, index),
                             ],
